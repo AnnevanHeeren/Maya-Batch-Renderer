@@ -1,20 +1,13 @@
-# -*- coding: utf-8 -*-
-
-################################################################################
-## Form generated from reading UI file 'createblockrnXpbw.ui'
-##
-## Created by: Qt User Interface Compiler version 5.15.2
-##
-## WARNING! All changes made in this file will be lost when recompiling UI file!
-################################################################################
+# Template for using a converted .ui with Maya
 
 from PySide2.QtCore import *
-from PySide2.QtGui import *
+# from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 import maya.OpenMayaUI as omui
 import pymel.core as pm
 from shiboken2 import wrapInstance  # Used to access internal information about Maya
+
 
 def maya_main_window():
     """
@@ -29,6 +22,8 @@ def maya_main_window():
     main_window_pointer = omui.MQtUtil.mainWindow()
     return wrapInstance(int(main_window_pointer), QWidget)
 
+
+# This class is the converted .ui file, without any changes
 class Ui_Dialog(object):
     def setupUi(self, Dialog):
         if not Dialog.objectName():
@@ -57,8 +52,29 @@ class Ui_Dialog(object):
     # retranslateUi
 
 
-class CreateCubeWindow(Ui_Dialog):
+# The functionality class, can access ui class elements
+class CreateCubeWindow(QDialog):
+    # Set parent to the Maya main window here
     def __init__(self, parent=maya_main_window()):
-        super(Ui_Dialog, self).__init__(parent)
+        super(CreateCubeWindow, self).__init__(parent)
+        self.ui = Ui_Dialog() # to access elements from the UI class within the functionality class
+        self.ui.setupUi(self)
+        self.ui.createBox.clicked.connect(self.createBox)
 
-        self.show(Ui_Dialog)
+    def createBox(self):
+        pm.polyCube()
+
+# Call this function in the maya script editor
+def showWindow():
+    window = CreateCubeWindow() # You can also set the parent flag here, set parent flag in functionality to None
+    window.show()
+
+"""
+in maya:
+
+import cube_creator_ui as cubeui
+from importlib import reload
+reload(cubeui)
+cubeui.CreateCubeWindow()
+cubeui.showWindow()
+"""
