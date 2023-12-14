@@ -312,16 +312,8 @@ class BatchRenderer(QDialog):
         print(self.file_list)
         self.list_files()
 
-    def include_subdirectories(self):
-        chbox_subdirectories = self.ui.chbox_subdir.isChecked()
-        return bool(chbox_subdirectories)
-
-    def only_latest_versions(self):
-        chbox_latest_versions = self.ui.chbox_latest_versions.isChecked()
-        return bool(chbox_latest_versions)
-
     def get_files(self):
-        if self.include_subdirectories():
+        if self.ui.chbox_subdir.isChecked():
             for (path, dirs, files) in os.walk(self.folder_dir):
                 for file in files:
                     self.file_list.append(f'{path}/{file}')
@@ -333,6 +325,7 @@ class BatchRenderer(QDialog):
     def list_files(self):
         for i, file in enumerate(self.file_list):
             self.ui.lst_available.addItem(file)
+
 
 def show_window():
     window = BatchRenderer()
