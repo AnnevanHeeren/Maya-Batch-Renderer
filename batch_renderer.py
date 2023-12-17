@@ -6,6 +6,7 @@ from PySide2.QtWidgets import *
 
 import maya.OpenMayaUI as omui
 import pymel.core as pm
+import mtoa.utils as mutils
 from shiboken2 import wrapInstance
 
 
@@ -287,6 +288,7 @@ class BatchRenderer(QDialog):
         self.ui = Ui_Dialog()
         self.ui.setupUi(self)
         self.create_connections()
+        self.setup_scene()
 
         # TODO: should probably be dialog?
         app = QApplication.instance()
@@ -297,9 +299,50 @@ class BatchRenderer(QDialog):
                 widget.close()
 
         self.file_list = []
+        self.active_files = []
+        self.available_files = []
 
     def create_connections(self):
         self.ui.btn_select_dir.clicked.connect(self.get_directory)
+        self.ui.btn_render.clicked.connect(self.render)
+        print('create connections')
+
+    def setup_scene(self):
+        bounding_box = pm.polyCube(n='bounds', d=1.5, w=1.5)
+        pm.setAttr(bounding_box[0].translateY, 0.5)
+
+        # key_light = mutils.createLocator("aiAreaLight", asLight=True)
+        # fill_light = mutils.createLocator("aiAreaLight", asLight=True)
+        # rim_light = mutils.createLocator("aiAreaLight", asLight=True)
+
+        key_light = mutils.createLocator("aiAreaLight", asLight=True)
+        transform_node = pm.listRelatives(key_light[1], parent=True)
+        pm.rename(transform_node, 'key_light_br')
+        pm.setAttr("key_light_br.translateX", 4)
+        pm.setAttr("key_light_br.translateZ", 3)
+        pm.setAttr("key_light_br.translateY", 2.4)
+        pm.setAttr("key_light_br.rotateX", -24)
+        pm.setAttr("key_light_br.rotateY", 50)
+        pm.setAttr("key_light_br.exposure", 8)
+
+        fill_light = mutils.createLocator("aiAreaLight", asLight=True)
+        transform_node = pm.listRelatives(fill_light[1], parent=True)
+        pm.rename(transform_node, 'fill_light_br')
+        pm.setAttr("fill_light_br.translateX", 3)
+        pm.setAttr("fill_light_br.translateZ", -4)
+        pm.setAttr("fill_light_br.translateY", 1.6)
+        pm.setAttr("fill_light_br.rotateX", -20)
+        pm.setAttr("fill_light_br.rotateY", 140)
+        pm.setAttr("fill_light_br.exposure", 6)
+
+        rim_light = mutils.createLocator("aiAreaLight", asLight=True)
+        transform_node = pm.listRelatives(rim_light[1], parent=True)
+        pm.rename(transform_node, 'rim_light_br')
+        pm.setAttr("rim_light_br.translateX", -4)
+        pm.setAttr("rim_light_br.translateY", 1)
+        pm.setAttr("rim_light_br.rotateX", -8)
+        pm.setAttr("rim_light_br.rotateY", -90)
+        pm.setAttr("rim_light_br.exposure", 6)
 
     def get_directory(self, *args):
         self.folder_dir = QFileDialog.getExistingDirectory(self,
@@ -326,7 +369,27 @@ class BatchRenderer(QDialog):
         for i, file in enumerate(self.file_list):
             self.ui.lst_available.addItem(file)
 
+    def render(self):
+        self.active_files.append('E:\\DAE\\Programming3\\objects/Fruit_v005.obj')
+        for item in self.active_files:
+            pm.setAttr('defaultRenderGlobals.imageFilePrefix',
+                       'E:\\DAE\\Programming3\\BatchRenderer/render',
+                       type='string')
+            pm.importFile(item)
+            pm.batchRender('Fruit_v005')
+            pm.delete('Fruit_v005')
+
 
 def show_window():
     window = BatchRenderer()
     window.show()
+
+
+"""
+in maya:
+import batch_renderer as br
+from importlib import reload
+reload(br)
+# br.BatchRenderer()
+br.show_window()
+"""
