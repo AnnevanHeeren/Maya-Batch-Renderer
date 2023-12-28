@@ -225,9 +225,9 @@ class Ui_BatchRenderer(object):
         self.btn_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Output Directory", None))
         self.lbl_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Selected Output Directory...", None))
         self.lbl_render_settings.setText(QCoreApplication.translate("BatchRenderer", u"Render Settings", None))
-        self.cmb_output_type.setItemText(0, QCoreApplication.translate("BatchRenderer", u"PNG", None))
-        self.cmb_output_type.setItemText(1, QCoreApplication.translate("BatchRenderer", u"JPG", None))
-        self.cmb_output_type.setItemText(2, QCoreApplication.translate("BatchRenderer", u"EXR", None))
+        self.cmb_output_type.setItemText(0, QCoreApplication.translate("BatchRenderer", u"png", None))
+        self.cmb_output_type.setItemText(1, QCoreApplication.translate("BatchRenderer", u"jpeg", None))
+        self.cmb_output_type.setItemText(2, QCoreApplication.translate("BatchRenderer", u"exr", None))
 
         self.cmb_output_size.setItemText(0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
         self.cmb_output_size.setItemText(1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
@@ -272,29 +272,39 @@ class BatchRenderer(QDialog):
         self.original_file_list = {}
         self.file_type_list = ['fbx', 'obj', 'ma', 'mb']
 
+        self.render_cam
+
     def create_connections(self):
+        # Calls methods on button press
         self.ui.btn_select_dir.clicked.connect(self.get_directory)
         self.ui.btn_render.clicked.connect(self.render)
         self.ui.btn_close.clicked.connect(self.close)
 
+        # When a file type checkbox is pressed, the update method is called
         self.ui.chbox_fbx.stateChanged.connect(lambda state:
                                                self.update_checkbox_filetype('fbx', state))
         self.ui.chbox_obj.stateChanged.connect(lambda state:
                                                self.update_checkbox_filetype('obj', state))
         self.ui.chbox_ma.stateChanged.connect(lambda state:
-                                               self.update_checkbox_filetype('ma', state))
+                                              self.update_checkbox_filetype('ma', state))
         self.ui.chbox_mb.stateChanged.connect(lambda state:
-                                               self.update_checkbox_filetype('mb', state))
+                                              self.update_checkbox_filetype('mb', state))
+
+        self.ui.btn_delete_files.clicked.connect(self.delete_files)
+        self.ui.btn_clear_list.clicked.connect(self.clear_file_list)
+
+        self.ui.btn_output_dir.clicked.connect(self.set_output_directory)
 
         print('create connections')
 
     def setup_scene(self):
+        """
+        Creates a three-point light setup, a camera, an infinity background
+        and a box to scale objects to
+        """
         bounding_box = pm.polyCube(n='bounds', d=1.5, w=1.5)
         pm.setAttr(bounding_box[0].translateY, 0.5)
-
-        # key_light = mutils.createLocator("aiAreaLight", asLight=True)
-        # fill_light = mutils.createLocator("aiAreaLight", asLight=True)
-        # rim_light = mutils.createLocator("aiAreaLight", asLight=True)
+        pm.scale(bounding_box[0], 0.2, 0.2, 0.2)
 
         key_light = mutils.createLocator("aiAreaLight", asLight=True)
         transform_node = pm.listRelatives(key_light[1], parent=True)
@@ -320,12 +330,31 @@ class BatchRenderer(QDialog):
         transform_node = pm.listRelatives(rim_light[1], parent=True)
         pm.rename(transform_node, 'rim_light_br')
         pm.setAttr("rim_light_br.translateX", -4)
-        pm.setAttr("rim_light_br.translateY", 1)
+        pm.setAttr("rim_light_br.translateY", 2.6)
         pm.setAttr("rim_light_br.rotateX", -8)
         pm.setAttr("rim_light_br.rotateY", -90)
         pm.setAttr("rim_light_br.exposure", 6)
 
+        pm.polyPlane(n='background', sw=1, sh=1, h=20, w=8)
+        pm.polyExtrudeEdge('background.e[1]', ty=10)
+        pm.polyBevel3('background.e[1]', f=0.4, sg=6, oaf=True)
+        pm.move(-2, 0, 0)
+        pm.polySoftEdge(a=180)
+
+        self.render_cam = pm.camera(n='render_cam')
+        pm.setAttr(self.render_cam[0].rotateY, 90)
+        pm.setAttr(self.render_cam[0].translateX, 4)
+        pm.setAttr(self.render_cam[0].translateY, 1)
+        pm.setAttr(self.render_cam[0].rotateZ, 6)
+        pm.setAttr(self.render_cam[0].translate, lock=True)
+        pm.setAttr(self.render_cam[0].rotate, lock=True)
+
     def get_directory(self, *args):
+        """
+        Opens file navigator and lets user choose a directory to
+        gather files from
+        Shows the chosen directory in the UI
+        """
         self.file_list.clear()
         self.folder_dir = QFileDialog().getExistingDirectory(self,
                                                              "Select Directory")
@@ -339,17 +368,30 @@ class BatchRenderer(QDialog):
         self.list_files()
 
     def update_checkbox_filetype(self, checkbox, state):
+        """
+        Updates the list of accepted file types when checkbox is pressed
+        :param checkbox: the checkbox that was pressed
+        :param state: the state the checkbox changed to
+        """
+
+        # state 2 means checkbox is checked
         if state == 2:
             self.file_type_list.append(checkbox)
+        # state 0 means checkbox is unchecked
         elif state == 0:
             self.file_type_list.remove(checkbox)
 
+        # A dict of new filtered files is assigned to old file dict
         self.file_list = self.filter_files()
         self.list_files()
         print(self.file_type_list)
         print(self.file_list)
 
     def get_files(self):
+        """
+        Creates a list of all files found in the given directory,
+        and also goes through subdirectories if that checkbox is checked
+        """
         if self.ui.chbox_subdir.isChecked():
             for (path, dirs, files) in os.walk(self.folder_dir):
                 for file in files:
@@ -359,17 +401,26 @@ class BatchRenderer(QDialog):
         else:
             for item in os.listdir(self.folder_dir):
                 if os.path.isfile(f'{self.folder_dir}/{item}'):
-                    file_type = file.split('.')[-1]
+                    file_type = item.split('.')[-1]
                     if file_type in self.file_type_list:
                         self.file_list[f'{self.folder_dir}/{item}'] = item
         self.original_file_list = self.file_list
 
     def list_files(self):
+        """
+        Lists all files from the file dict in the list widget
+        In order to update correctly, the widget is cleared first
+        """
         self.ui.lst_active.clear()
         for file in self.file_list:
             self.ui.lst_active.addItem(file)
 
     def filter_files(self):
+        """
+        Is called in the update checkbox method
+        Creates a temporary dict with only the checked filetypes
+        :returns: a dict with only checked file types
+        """
         filtered_file_list = {}
         for full_path, file in self.original_file_list.items():
             file_type = self.original_file_list[full_path].split('.')[-1]
@@ -377,30 +428,76 @@ class BatchRenderer(QDialog):
                 filtered_file_list[full_path] = file
         return filtered_file_list
 
+    def delete_files(self):
+        """
+        Deletes all files that are selected in the list widget
+        Gets all selected items as list from widget
+        Converts each item from pointer to text that matches file dict key
+        Creates a list of selected files and removes each item from file dict
+        """
+        selected_files = [file.text() for file in self.ui.lst_active.selectedItems()]
+
+        for file in selected_files:
+            self.original_file_list.pop(file, None)
+            self.file_list.pop(file, None)
+        self.list_files()
+
+    def clear_file_list(self):
+        self.file_list.clear()
+        self.list_files()
+
     def rotate_object(self):
+        # Rotates object 360* from start till end of timeline
         pass
 
+    def set_output_directory(self):
+        self.output_dir = QFileDialog().getExistingDirectory(self,
+                                                        "Select Directory")
+        self.ui.lbl_output_dir.setEnabled(True)
+        self.ui.lbl_output_dir.setText(self.output_dir)
+
+        self.output_dir = self.output_dir.replace('/', '\\')
+
+        print(self.output_dir)
+
+    def scale_obj(self, geo):
+        pm.xform(geo, centerPivots=True)
+        pm.makeIdentity(geo, apply=True, translate=True, rotate=True, scale=True)
+        pm.matchTransform(geo, 'bounds')
+
     def render(self):
-        self.file_list['E:\\DAE\\Programming3\\objects/Fruit_v005.obj'] = 'Fruit_v005.obj'
+        """
+        Sets render settings
+        Renders each object that is in the file dict and stores rendered frame
+        in output directory
+        """
         pm.setAttr('defaultRenderGlobals.animation', 1)
         pm.setAttr('defaultRenderGlobals.extensionPadding', 4)
-        # pm.setAttr('defaultRenderGlobals.imageFormat', ?)
+        pm.setAttr('defaultRenderGlobals.putFrameBeforeExt', 1)
         pm.setAttr('defaultRenderGlobals.startFrame', 1001)
-        pm.setAttr('defaultRenderGlobals.endFrame', 1101)
+        pm.setAttr('defaultRenderGlobals.endFrame', 1021)
+        pm.setAttr(self.render_cam[0].renderable, True)
+        pm.setAttr('persp.renderable', False)
 
-        output_file_types = {'JPG': 8,
-                             'PNG': 32,
-                             'EXR': 40}
-        pm.setAttr('defaultRenderGlobals.imageFormat',
-                   output_file_types[(self.ui.cmb_output_type.currentText())])
+        if self.ui.cmb_output_size.currentText() == '1920x1080':
+            pm.setAttr('defaultResolution.width', 1920)
+            pm.setAttr('defaultResolution.height', 1080)
+        else:
+            pm.setAttr('defaultResolution.width', 960)
+            pm.setAttr('defaultResolution.height', 540)
 
-        for item in self.file_list:
+        pm.setAttr('defaultArnoldDriver.ai_translator',
+                   self.ui.cmb_output_type.currentText(), type='string')
+
+        for full_path, file in self.file_list.items():
+            geo = file.split('.')[0]
             pm.setAttr('defaultRenderGlobals.imageFilePrefix',
-                       'E:\\DAE\\Programming3\\BatchRenderer/render',
+                       f'{self.output_dir}\\{geo}/{geo}',
                        type='string')
-            pm.importFile(item)
-            pm.batchRender('Fruit_v005')
-            pm.delete('Fruit_v005')
+            pm.importFile(full_path)
+            self.scale_obj(geo)
+            pm.batchRender(geo)
+            pm.delete(geo)
 
 
 def show_window():
