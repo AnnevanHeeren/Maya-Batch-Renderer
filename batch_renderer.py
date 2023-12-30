@@ -273,6 +273,8 @@ class BatchRenderer(QDialog):
         self.file_type_list = ['fbx', 'obj', 'ma', 'mb']
 
         self.render_cam
+        self.START_FRAME = 1001
+        self.END_FRAME = 1021
 
     def create_connections(self):
         # Calls methods on button press
@@ -441,14 +443,16 @@ class BatchRenderer(QDialog):
             self.original_file_list.pop(file, None)
             self.file_list.pop(file, None)
         self.list_files()
+        print(self.file_list)
 
     def clear_file_list(self):
         self.file_list.clear()
         self.list_files()
 
-    def rotate_object(self):
-        # Rotates object 360* from start till end of timeline
-        pass
+    def rotate_object(self, geo):
+        # Rotates object 360* from start till end of frame range
+        pm.setKeyframe(geo, attribute='rotateY', time=self.START_FRAME, value=0)
+        pm.setKeyframe(geo, attribute='rotateY', time=self.END_FRAME, value=360)
 
     def set_output_directory(self):
         self.output_dir = QFileDialog().getExistingDirectory(self,
@@ -474,8 +478,8 @@ class BatchRenderer(QDialog):
         pm.setAttr('defaultRenderGlobals.animation', 1)
         pm.setAttr('defaultRenderGlobals.extensionPadding', 4)
         pm.setAttr('defaultRenderGlobals.putFrameBeforeExt', 1)
-        pm.setAttr('defaultRenderGlobals.startFrame', 1001)
-        pm.setAttr('defaultRenderGlobals.endFrame', 1021)
+        pm.setAttr('defaultRenderGlobals.startFrame', self.START_FRAME)
+        pm.setAttr('defaultRenderGlobals.endFrame', self.END_FRAME)
         pm.setAttr(self.render_cam[0].renderable, True)
         pm.setAttr('persp.renderable', False)
 
@@ -494,10 +498,11 @@ class BatchRenderer(QDialog):
             pm.setAttr('defaultRenderGlobals.imageFilePrefix',
                        f'{self.output_dir}\\{geo}/{geo}',
                        type='string')
-            pm.importFile(full_path)
-            self.scale_obj(geo)
-            pm.batchRender(geo)
-            pm.delete(geo)
+            imported = pm.importFile(full_path, i=True, returnNewNodes=True)
+            self.scale_obj(imported)
+            self.rotate_object(imported)
+            pm.batchRender(imported)
+            pm.delete(imported)
 
 
 def show_window():
