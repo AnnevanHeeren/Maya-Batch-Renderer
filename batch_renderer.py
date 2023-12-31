@@ -292,6 +292,7 @@ class BatchRenderer(QDialog):
         self.ui.chbox_mb.stateChanged.connect(lambda state:
                                               self.update_checkbox_filetype('mb', state))
 
+        self.ui.btn_select_files.clicked.connect(self.add_files)
         self.ui.btn_delete_files.clicked.connect(self.delete_files)
         self.ui.btn_clear_list.clicked.connect(self.clear_file_list)
 
@@ -429,6 +430,20 @@ class BatchRenderer(QDialog):
             if file_type in self.file_type_list:
                 filtered_file_list[full_path] = file
         return filtered_file_list
+
+    def add_files(self):
+        dialog = QFileDialog(self)
+        dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
+        dialog.setViewMode(QFileDialog.Detail)
+        file_names, file_type = dialog.getOpenFileNames(self, caption="Select Files to Add")
+        for full_path in file_names:
+            if full_path not in self.original_file_list:
+                file = full_path.split('/')[-1]
+                self.original_file_list[full_path] = file
+                self.file_list[full_path] = file
+        print(self.file_list)
+        self.file_list = self.filter_files()
+        self.list_files()
 
     def delete_files(self):
         """
