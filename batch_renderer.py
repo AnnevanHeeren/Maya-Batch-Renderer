@@ -5,6 +5,7 @@ from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 
 import maya.OpenMayaUI as omui
+import maya.mel as mel
 import pymel.core as pm
 import mtoa.utils as mutils
 from shiboken2 import wrapInstance
@@ -516,7 +517,7 @@ class BatchRenderer(QDialog):
             imported = pm.importFile(full_path, i=True, returnNewNodes=True)
             self.scale_obj(imported)
             self.rotate_object(imported)
-            pm.batchRender(imported)
+            mel.eval('arnoldRender -b;')
             pm.delete(imported)
 
 
