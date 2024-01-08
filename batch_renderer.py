@@ -280,7 +280,7 @@ class BatchRenderer(QDialog):
     def create_connections(self):
         # Calls methods on button press
         self.ui.btn_select_dir.clicked.connect(self.get_directory)
-        self.ui.btn_render.clicked.connect(self.render)
+        self.ui.btn_render.clicked.connect(self.render_clicked)
         self.ui.btn_close.clicked.connect(self.close)
 
         # When a file type checkbox is pressed, the update method is called
@@ -519,6 +519,12 @@ class BatchRenderer(QDialog):
             self.rotate_object(imported)
             mel.eval('arnoldRender -b;')
             pm.delete(imported)
+
+    def render_clicked(self):
+        if not self.file_list:
+            pm.warning("No Files to Render!")
+        else:
+            self.render()
 
 
 def show_window():
