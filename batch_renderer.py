@@ -261,7 +261,6 @@ class BatchRenderer(QDialog):
         self.create_connections()
         self.setup_scene()
 
-        # TODO: should probably be dialog?
         app = QApplication.instance()
         for widget in app.topLevelWidgets():
             # if the name of the dialog already exists as another dialog,
@@ -274,6 +273,7 @@ class BatchRenderer(QDialog):
         self.file_type_list = ['fbx', 'obj', 'ma', 'mb']
 
         self.render_cam
+
         self.START_FRAME = 1001
         self.END_FRAME = 1021
 
@@ -283,7 +283,9 @@ class BatchRenderer(QDialog):
         self.ui.btn_render.clicked.connect(self.render_clicked)
         self.ui.btn_close.clicked.connect(self.close)
 
-        # When a file type checkbox is pressed, the update method is called
+        # When a file type checkbox is pressed, the update method is called.
+        # stateChanged.connect() returns a state, lambda gets the state and
+        # passes it to the update checkbox function.
         self.ui.chbox_fbx.stateChanged.connect(lambda state:
                                                self.update_checkbox_filetype('fbx', state))
         self.ui.chbox_obj.stateChanged.connect(lambda state:
@@ -309,6 +311,7 @@ class BatchRenderer(QDialog):
         bounding_box = pm.polyCube(n='bounds', d=1.5, w=1.5)
         pm.setAttr(bounding_box[0].translateY, 0.5)
         pm.scale(bounding_box[0], 0.2, 0.2, 0.2)
+        pm.hide(bounding_box[0])
 
         key_light = mutils.createLocator("aiAreaLight", asLight=True)
         transform_node = pm.listRelatives(key_light[1], parent=True)
@@ -318,7 +321,7 @@ class BatchRenderer(QDialog):
         pm.setAttr("key_light_br.translateY", 2.4)
         pm.setAttr("key_light_br.rotateX", -24)
         pm.setAttr("key_light_br.rotateY", 50)
-        pm.setAttr("key_light_br.exposure", 8)
+        pm.setAttr("key_light_br.exposure", 7.6)
 
         fill_light = mutils.createLocator("aiAreaLight", asLight=True)
         transform_node = pm.listRelatives(fill_light[1], parent=True)
@@ -363,12 +366,12 @@ class BatchRenderer(QDialog):
         self.folder_dir = QFileDialog().getExistingDirectory(self,
                                                              "Select Directory")
 
+        # Changes the directory label to the selected dir
         self.ui.lbl_selected_dir.setEnabled(True)
         self.ui.lbl_selected_dir.setText(self.folder_dir)
-        print("QFileDialog")
         self.file_list.clear()
         self.get_files()
-        print(self.file_list)
+        # print(self.file_list)
         self.list_files()
 
     def update_checkbox_filetype(self, checkbox, state):
@@ -393,7 +396,7 @@ class BatchRenderer(QDialog):
 
     def get_files(self):
         """
-        Creates a list of all files found in the given directory,
+        Creates a dictionary of all files found in the given directory,
         and also goes through subdirectories if that checkbox is checked
         """
         if self.ui.chbox_subdir.isChecked():
@@ -408,6 +411,9 @@ class BatchRenderer(QDialog):
                     file_type = item.split('.')[-1]
                     if file_type in self.file_type_list:
                         self.file_list[f'{self.folder_dir}/{item}'] = item
+
+        # In order for the filters to work correctly,
+        # there needs to be an original and current file dict/list
         self.original_file_list = self.file_list
 
     def list_files(self):
@@ -433,6 +439,11 @@ class BatchRenderer(QDialog):
         return filtered_file_list
 
     def add_files(self):
+        """
+        Opens a dialog to select files from
+        Dialog returns a tuple
+        Then filters them according to the file types selected
+        """
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         dialog.setViewMode(QFileDialog.Detail)
@@ -442,7 +453,7 @@ class BatchRenderer(QDialog):
                 file = full_path.split('/')[-1]
                 self.original_file_list[full_path] = file
                 self.file_list[full_path] = file
-        print(self.file_list)
+        # print(self.file_list)
         self.file_list = self.filter_files()
         self.list_files()
 
@@ -471,6 +482,10 @@ class BatchRenderer(QDialog):
         pm.setKeyframe(geo, attribute='rotateY', time=self.END_FRAME, value=360)
 
     def set_output_directory(self):
+        """
+        Opens file dialog for the user to select an output directory
+        Changes the output dir label
+        """
         self.output_dir = QFileDialog().getExistingDirectory(self,
                                                         "Select Directory")
         self.ui.lbl_output_dir.setEnabled(True)
@@ -481,6 +496,9 @@ class BatchRenderer(QDialog):
         print(self.output_dir)
 
     def scale_obj(self, geo):
+        """
+        Scales imported object to the reference object
+        """
         pm.xform(geo, centerPivots=True)
         pm.makeIdentity(geo, apply=True, translate=True, rotate=True, scale=True)
         pm.matchTransform(geo, 'bounds')
@@ -491,6 +509,7 @@ class BatchRenderer(QDialog):
         Renders each object that is in the file dict and stores rendered frame
         in output directory
         """
+        # Render settings independent of user input and objects
         pm.setAttr('defaultRenderGlobals.animation', 1)
         pm.setAttr('defaultRenderGlobals.extensionPadding', 4)
         pm.setAttr('defaultRenderGlobals.putFrameBeforeExt', 1)
@@ -499,6 +518,7 @@ class BatchRenderer(QDialog):
         pm.setAttr(self.render_cam[0].renderable, True)
         pm.setAttr('persp.renderable', False)
 
+        # Render settings dependent of user input
         if self.ui.cmb_output_size.currentText() == '1920x1080':
             pm.setAttr('defaultResolution.width', 1920)
             pm.setAttr('defaultResolution.height', 1080)
@@ -509,6 +529,7 @@ class BatchRenderer(QDialog):
         pm.setAttr('defaultArnoldDriver.ai_translator',
                    self.ui.cmb_output_type.currentText(), type='string')
 
+        # Runs over all objects the user wants to render
         for full_path, file in self.file_list.items():
             geo = file.split('.')[0]
             pm.setAttr('defaultRenderGlobals.imageFilePrefix',
@@ -517,10 +538,14 @@ class BatchRenderer(QDialog):
             imported = pm.importFile(full_path, i=True, returnNewNodes=True)
             self.scale_obj(imported)
             self.rotate_object(imported)
+            # Only way to batch render sequentially with Arnold in Maya
             mel.eval('arnoldRender -b;')
             pm.delete(imported)
 
     def render_clicked(self):
+        """
+        Checks if dict of files is empty, and renders or gives warning to user when empty
+        """
         if not self.file_list:
             pm.warning("No Files to Render!")
         else:
@@ -537,6 +562,5 @@ in maya:
 import batch_renderer as br
 from importlib import reload
 reload(br)
-# br.BatchRenderer()
 br.show_window()
 """
