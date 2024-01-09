@@ -277,6 +277,8 @@ class BatchRenderer(QDialog):
         self.START_FRAME = 1001
         self.END_FRAME = 1021
 
+        self.output_dir = "" 
+
     def create_connections(self):
         # Calls methods on button press
         self.ui.btn_select_dir.clicked.connect(self.get_directory)
@@ -548,6 +550,8 @@ class BatchRenderer(QDialog):
         """
         if not self.file_list:
             pm.warning("No Files to Render!")
+        elif self.output_dir == "":
+            pm.warning("No Output Directory Selected!")
         else:
             self.render()
 
