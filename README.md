@@ -28,4 +28,4 @@ The Arnold for Maya Python library.
 Used to create Arnold lights.
 
   ### Shiboken2
-Offers Python bindings for Qt C++ classes. BatchRenderer
+Offers Python bindings for Qt C++ classes.
