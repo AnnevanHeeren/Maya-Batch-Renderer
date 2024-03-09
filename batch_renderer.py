@@ -20,7 +20,8 @@ class Ui_BatchRenderer(object):
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(BatchRenderer.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            BatchRenderer.sizePolicy().hasHeightForWidth())
         BatchRenderer.setSizePolicy(sizePolicy)
         BatchRenderer.setContextMenuPolicy(Qt.NoContextMenu)
         BatchRenderer.setInputMethodHints(Qt.ImhNone)
@@ -52,7 +53,8 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.lbl_selected_dir)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_3)
 
@@ -65,7 +67,6 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_5.addWidget(self.lbl_active_files)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_5)
 
         self.horizontalLayout = QHBoxLayout()
@@ -77,7 +78,6 @@ class Ui_BatchRenderer(object):
         self.lst_active.setSortingEnabled(True)
 
         self.horizontalLayout.addWidget(self.lst_active)
-
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -110,7 +110,6 @@ class Ui_BatchRenderer(object):
 
         self.gridLayout_2.addWidget(self.chbox_ma, 2, 1, 1, 1)
 
-
         self.verticalLayout.addLayout(self.gridLayout_2)
 
         self.buttonBox_2 = QDialogButtonBox(self.verticalLayoutWidget)
@@ -138,10 +137,10 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_3.addWidget(self.btn_clear_list)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_2)
 
@@ -155,7 +154,8 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.lbl_output_dir)
 
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_5)
 
@@ -179,7 +179,8 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.cmb_output_size)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_4)
 
@@ -195,7 +196,6 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_6.addWidget(self.btn_render)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_6)
 
         QWidget.setTabOrder(self.btn_select_dir, self.btn_output_dir)
@@ -208,33 +208,55 @@ class Ui_BatchRenderer(object):
     # setupUi
 
     def retranslateUi(self, BatchRenderer):
-        BatchRenderer.setWindowTitle(QCoreApplication.translate("BatchRenderer", u"Batch Render Menu", None))
-#if QT_CONFIG(whatsthis)
+        BatchRenderer.setWindowTitle(QCoreApplication.translate(
+            "BatchRenderer", u"Batch Render Menu", None))
+# if QT_CONFIG(whatsthis)
         BatchRenderer.setWhatsThis("")
-#endif // QT_CONFIG(whatsthis)
-        self.chbox_subdir.setText(QCoreApplication.translate("BatchRenderer", u"Include Subdirectories", None))
-        self.btn_select_dir.setText(QCoreApplication.translate("BatchRenderer", u"Select Directory", None))
-        self.lbl_selected_dir.setText(QCoreApplication.translate("BatchRenderer", u"Selected Directory...", None))
-        self.lbl_active_files.setText(QCoreApplication.translate("BatchRenderer", u"Files to Render", None))
-        self.chbox_mb.setText(QCoreApplication.translate("BatchRenderer", u"MB", None))
-        self.chbox_obj.setText(QCoreApplication.translate("BatchRenderer", u"OBJ", None))
-        self.chbox_fbx.setText(QCoreApplication.translate("BatchRenderer", u"FBX", None))
-        self.chbox_ma.setText(QCoreApplication.translate("BatchRenderer", u"MA", None))
-        self.btn_select_files.setText(QCoreApplication.translate("BatchRenderer", u"Add Item", None))
-        self.btn_delete_files.setText(QCoreApplication.translate("BatchRenderer", u"Delete Item", None))
-        self.btn_clear_list.setText(QCoreApplication.translate("BatchRenderer", u"Clear All", None))
-        self.btn_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Output Directory", None))
-        self.lbl_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Selected Output Directory...", None))
-        self.lbl_render_settings.setText(QCoreApplication.translate("BatchRenderer", u"Render Settings", None))
-        self.cmb_output_type.setItemText(0, QCoreApplication.translate("BatchRenderer", u"png", None))
-        self.cmb_output_type.setItemText(1, QCoreApplication.translate("BatchRenderer", u"jpeg", None))
-        self.cmb_output_type.setItemText(2, QCoreApplication.translate("BatchRenderer", u"exr", None))
+# endif // QT_CONFIG(whatsthis)
+        self.chbox_subdir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Include Subdirectories", None))
+        self.btn_select_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Select Directory", None))
+        self.lbl_selected_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Selected Directory...", None))
+        self.lbl_active_files.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Files to Render", None))
+        self.chbox_mb.setText(QCoreApplication.translate(
+            "BatchRenderer", u"MB", None))
+        self.chbox_obj.setText(QCoreApplication.translate(
+            "BatchRenderer", u"OBJ", None))
+        self.chbox_fbx.setText(QCoreApplication.translate(
+            "BatchRenderer", u"FBX", None))
+        self.chbox_ma.setText(QCoreApplication.translate(
+            "BatchRenderer", u"MA", None))
+        self.btn_select_files.setText(
+            QCoreApplication.translate("BatchRenderer", u"Add Item", None))
+        self.btn_delete_files.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Delete Item", None))
+        self.btn_clear_list.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Clear All", None))
+        self.btn_output_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Output Directory", None))
+        self.lbl_output_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Selected Output Directory...", None))
+        self.lbl_render_settings.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Render Settings", None))
+        self.cmb_output_type.setItemText(
+            0, QCoreApplication.translate("BatchRenderer", u"png", None))
+        self.cmb_output_type.setItemText(
+            1, QCoreApplication.translate("BatchRenderer", u"jpeg", None))
+        self.cmb_output_type.setItemText(
+            2, QCoreApplication.translate("BatchRenderer", u"exr", None))
 
-        self.cmb_output_size.setItemText(0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
-        self.cmb_output_size.setItemText(1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
+        self.cmb_output_size.setItemText(
+            0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
+        self.cmb_output_size.setItemText(
+            1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
 
-        self.btn_close.setText(QCoreApplication.translate("BatchRenderer", u"Close", None))
-        self.btn_render.setText(QCoreApplication.translate("BatchRenderer", u"Render", None))
+        self.btn_close.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Close", None))
+        self.btn_render.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Render", None))
     # retranslateUi
 
 
@@ -268,8 +290,8 @@ class BatchRenderer(QDialog):
             if widget.objectName() == self.ui.object_name:
                 widget.close()
 
-        self.file_list = {}
-        self.original_file_list = {}
+        self.file_dict = {}
+        self.original_file_dict = {}
         self.file_type_list = ['fbx', 'obj', 'ma', 'mb']
 
         self.render_cam
@@ -277,7 +299,7 @@ class BatchRenderer(QDialog):
         self.START_FRAME = 1001
         self.END_FRAME = 1021
 
-        self.output_dir = "" 
+        self.output_dir = ""
 
     def create_connections(self):
         # Calls methods on button press
@@ -299,7 +321,7 @@ class BatchRenderer(QDialog):
 
         self.ui.btn_select_files.clicked.connect(self.add_files)
         self.ui.btn_delete_files.clicked.connect(self.delete_files)
-        self.ui.btn_clear_list.clicked.connect(self.clear_file_list)
+        self.ui.btn_clear_list.clicked.connect(self.clear_file_dict)
 
         self.ui.btn_output_dir.clicked.connect(self.set_output_directory)
 
@@ -364,16 +386,16 @@ class BatchRenderer(QDialog):
         gather files from
         Shows the chosen directory in the UI
         """
-        self.file_list.clear()
+        self.file_dict.clear()
         self.folder_dir = QFileDialog().getExistingDirectory(self,
                                                              "Select Directory")
 
         # Changes the directory label to the selected dir
         self.ui.lbl_selected_dir.setEnabled(True)
         self.ui.lbl_selected_dir.setText(self.folder_dir)
-        self.file_list.clear()
+        self.file_dict.clear()
         self.get_files()
-        # print(self.file_list)
+        # print(self.file_dict)
         self.list_files()
 
     def update_checkbox_filetype(self, checkbox, state):
@@ -391,10 +413,10 @@ class BatchRenderer(QDialog):
             self.file_type_list.remove(checkbox)
 
         # A dict of new filtered files is assigned to old file dict
-        self.file_list = self.filter_files()
+        self.file_dict = self.filter_files()
         self.list_files()
         print(self.file_type_list)
-        print(self.file_list)
+        print(self.file_dict)
 
     def get_files(self):
         """
@@ -406,17 +428,17 @@ class BatchRenderer(QDialog):
                 for file in files:
                     file_type = file.split('.')[-1]
                     if file_type in self.file_type_list:
-                        self.file_list[f'{path}/{file}'] = file
+                        self.file_dict[f'{path}/{file}'] = file
         else:
             for item in os.listdir(self.folder_dir):
                 if os.path.isfile(f'{self.folder_dir}/{item}'):
                     file_type = item.split('.')[-1]
                     if file_type in self.file_type_list:
-                        self.file_list[f'{self.folder_dir}/{item}'] = item
+                        self.file_dict[f'{self.folder_dir}/{item}'] = item
 
         # In order for the filters to work correctly,
         # there needs to be an original and current file dict/list
-        self.original_file_list = self.file_list
+        self.original_file_dict = self.file_dict
 
     def list_files(self):
         """
@@ -424,7 +446,7 @@ class BatchRenderer(QDialog):
         In order to update correctly, the widget is cleared first
         """
         self.ui.lst_active.clear()
-        for file in self.file_list:
+        for file in self.file_dict:
             self.ui.lst_active.addItem(file)
 
     def filter_files(self):
@@ -433,12 +455,12 @@ class BatchRenderer(QDialog):
         Creates a temporary dict with only the checked filetypes
         :returns: a dict with only checked file types
         """
-        filtered_file_list = {}
-        for full_path, file in self.original_file_list.items():
-            file_type = self.original_file_list[full_path].split('.')[-1]
+        filtered_file_dict = {}
+        for full_path, file in self.original_file_dict.items():
+            file_type = self.original_file_dict[full_path].split('.')[-1]
             if file_type in self.file_type_list:
-                filtered_file_list[full_path] = file
-        return filtered_file_list
+                filtered_file_dict[full_path] = file
+        return filtered_file_dict
 
     def add_files(self):
         """
@@ -449,14 +471,15 @@ class BatchRenderer(QDialog):
         dialog = QFileDialog(self)
         dialog.setFileMode(QFileDialog.FileMode.ExistingFiles)
         dialog.setViewMode(QFileDialog.Detail)
-        file_names, file_type = dialog.getOpenFileNames(self, caption="Select Files to Add")
+        file_names, file_type = dialog.getOpenFileNames(
+            self, caption="Select Files to Add")
         for full_path in file_names:
-            if full_path not in self.original_file_list:
+            if full_path not in self.original_file_dict:
                 file = full_path.split('/')[-1]
-                self.original_file_list[full_path] = file
-                self.file_list[full_path] = file
-        # print(self.file_list)
-        self.file_list = self.filter_files()
+                self.original_file_dict[full_path] = file
+                self.file_dict[full_path] = file
+        # print(self.file_dict)
+        self.file_dict = self.filter_files()
         self.list_files()
 
     def delete_files(self):
@@ -466,22 +489,25 @@ class BatchRenderer(QDialog):
         Converts each item from pointer to text that matches file dict key
         Creates a list of selected files and removes each item from file dict
         """
-        selected_files = [file.text() for file in self.ui.lst_active.selectedItems()]
+        selected_files = [file.text()
+                          for file in self.ui.lst_active.selectedItems()]
 
         for file in selected_files:
-            self.original_file_list.pop(file, None)
-            self.file_list.pop(file, None)
+            self.original_file_dict.pop(file, None)
+            self.file_dict.pop(file, None)
         self.list_files()
-        print(self.file_list)
+        print(self.file_dict)
 
-    def clear_file_list(self):
-        self.file_list.clear()
+    def clear_file_dict(self):
+        self.file_dict.clear()
         self.list_files()
 
     def rotate_object(self, geo):
         # Rotates object 360* from start till end of frame range
-        pm.setKeyframe(geo, attribute='rotateY', time=self.START_FRAME, value=0)
-        pm.setKeyframe(geo, attribute='rotateY', time=self.END_FRAME, value=360)
+        pm.setKeyframe(geo, attribute='rotateY',
+                       time=self.START_FRAME, value=0)
+        pm.setKeyframe(geo, attribute='rotateY',
+                       time=self.END_FRAME, value=360)
 
     def set_output_directory(self):
         """
@@ -489,7 +515,7 @@ class BatchRenderer(QDialog):
         Changes the output dir label
         """
         self.output_dir = QFileDialog().getExistingDirectory(self,
-                                                        "Select Directory")
+                                                             "Select Directory")
         self.ui.lbl_output_dir.setEnabled(True)
         self.ui.lbl_output_dir.setText(self.output_dir)
 
@@ -502,7 +528,8 @@ class BatchRenderer(QDialog):
         Scales imported object to the reference object
         """
         pm.xform(geo, centerPivots=True)
-        pm.makeIdentity(geo, apply=True, translate=True, rotate=True, scale=True)
+        pm.makeIdentity(geo, apply=True, translate=True,
+                        rotate=True, scale=True)
         pm.matchTransform(geo, 'bounds')
 
     def render(self):
@@ -532,7 +559,7 @@ class BatchRenderer(QDialog):
                    self.ui.cmb_output_type.currentText(), type='string')
 
         # Runs over all objects the user wants to render
-        for full_path, file in self.file_list.items():
+        for full_path, file in self.file_dict.items():
             geo = file.split('.')[0]
             pm.setAttr('defaultRenderGlobals.imageFilePrefix',
                        f'{self.output_dir}\\{geo}/{geo}',
@@ -548,7 +575,7 @@ class BatchRenderer(QDialog):
         """
         Checks if dict of files is empty, and renders or gives warning to user when empty
         """
-        if not self.file_list:
+        if not self.file_dict:
             pm.warning("No Files to Render!")
         elif self.output_dir == "":
             pm.warning("No Output Directory Selected!")
