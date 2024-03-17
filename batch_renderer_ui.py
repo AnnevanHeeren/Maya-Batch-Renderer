@@ -7,11 +7,13 @@ class Ui_BatchRenderer(object):
     def setupUi(self, BatchRenderer):
         if not BatchRenderer.objectName():
             BatchRenderer.setObjectName(u"BatchRenderer")
+        self.object_name = BatchRenderer.objectName()
         BatchRenderer.resize(621, 883)
         sizePolicy = QSizePolicy(QSizePolicy.Fixed, QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(BatchRenderer.sizePolicy().hasHeightForWidth())
+        sizePolicy.setHeightForWidth(
+            BatchRenderer.sizePolicy().hasHeightForWidth())
         BatchRenderer.setSizePolicy(sizePolicy)
         BatchRenderer.setContextMenuPolicy(Qt.NoContextMenu)
         BatchRenderer.setInputMethodHints(Qt.ImhNone)
@@ -39,10 +41,12 @@ class Ui_BatchRenderer(object):
 
         self.lbl_selected_dir = QLabel(self.verticalLayoutWidget)
         self.lbl_selected_dir.setObjectName(u"lbl_selected_dir")
+        self.lbl_selected_dir.setEnabled(False)
 
         self.verticalLayout.addWidget(self.lbl_selected_dir)
 
-        self.horizontalSpacer_3 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_3 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_3)
 
@@ -55,7 +59,6 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_5.addWidget(self.lbl_active_files)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_5)
 
         self.horizontalLayout = QHBoxLayout()
@@ -67,7 +70,6 @@ class Ui_BatchRenderer(object):
         self.lst_active.setSortingEnabled(True)
 
         self.horizontalLayout.addWidget(self.lst_active)
-
 
         self.verticalLayout.addLayout(self.horizontalLayout)
 
@@ -100,7 +102,6 @@ class Ui_BatchRenderer(object):
 
         self.gridLayout_2.addWidget(self.chbox_ma, 2, 1, 1, 1)
 
-
         self.verticalLayout.addLayout(self.gridLayout_2)
 
         self.buttonBox_2 = QDialogButtonBox(self.verticalLayoutWidget)
@@ -128,10 +129,10 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_3.addWidget(self.btn_clear_list)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_3)
 
-        self.horizontalSpacer_2 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_2 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_2)
 
@@ -145,7 +146,8 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.lbl_output_dir)
 
-        self.horizontalSpacer_5 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_5 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_5)
 
@@ -169,7 +171,8 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.cmb_output_size)
 
-        self.horizontalSpacer_4 = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+        self.horizontalSpacer_4 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_4)
 
@@ -185,7 +188,6 @@ class Ui_BatchRenderer(object):
 
         self.horizontalLayout_6.addWidget(self.btn_render)
 
-
         self.verticalLayout.addLayout(self.horizontalLayout_6)
 
         QWidget.setTabOrder(self.btn_select_dir, self.btn_output_dir)
@@ -198,32 +200,53 @@ class Ui_BatchRenderer(object):
     # setupUi
 
     def retranslateUi(self, BatchRenderer):
-        BatchRenderer.setWindowTitle(QCoreApplication.translate("BatchRenderer", u"Batch Render Menu", None))
-#if QT_CONFIG(whatsthis)
+        BatchRenderer.setWindowTitle(QCoreApplication.translate(
+            "BatchRenderer", u"Batch Render Menu", None))
+# if QT_CONFIG(whatsthis)
         BatchRenderer.setWhatsThis("")
-#endif // QT_CONFIG(whatsthis)
-        self.chbox_subdir.setText(QCoreApplication.translate("BatchRenderer", u"Include Subdirectories", None))
-        self.btn_select_dir.setText(QCoreApplication.translate("BatchRenderer", u"Select Directory", None))
-        self.lbl_selected_dir.setText(QCoreApplication.translate("BatchRenderer", u"Selected Directory...", None))
-        self.lbl_active_files.setText(QCoreApplication.translate("BatchRenderer", u"Files to Render", None))
-        self.chbox_mb.setText(QCoreApplication.translate("BatchRenderer", u"MB", None))
-        self.chbox_obj.setText(QCoreApplication.translate("BatchRenderer", u"OBJ", None))
-        self.chbox_fbx.setText(QCoreApplication.translate("BatchRenderer", u"FBX", None))
-        self.chbox_ma.setText(QCoreApplication.translate("BatchRenderer", u"MA", None))
-        self.btn_select_files.setText(QCoreApplication.translate("BatchRenderer", u"Add Item", None))
-        self.btn_delete_files.setText(QCoreApplication.translate("BatchRenderer", u"Delete Item", None))
-        self.btn_clear_list.setText(QCoreApplication.translate("BatchRenderer", u"Clear All", None))
-        self.btn_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Output Directory", None))
-        self.lbl_output_dir.setText(QCoreApplication.translate("BatchRenderer", u"Selected Output Directory...", None))
-        self.lbl_render_settings.setText(QCoreApplication.translate("BatchRenderer", u"Render Settings", None))
-        self.cmb_output_type.setItemText(0, QCoreApplication.translate("BatchRenderer", u"PNG", None))
-        self.cmb_output_type.setItemText(1, QCoreApplication.translate("BatchRenderer", u"JPG", None))
-        self.cmb_output_type.setItemText(2, QCoreApplication.translate("BatchRenderer", u"EXR", None))
+# endif // QT_CONFIG(whatsthis)
+        self.chbox_subdir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Include Subdirectories", None))
+        self.btn_select_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Select Directory", None))
+        self.lbl_selected_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Selected Directory...", None))
+        self.lbl_active_files.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Files to Render", None))
+        self.chbox_mb.setText(QCoreApplication.translate(
+            "BatchRenderer", u"MB", None))
+        self.chbox_obj.setText(QCoreApplication.translate(
+            "BatchRenderer", u"OBJ", None))
+        self.chbox_fbx.setText(QCoreApplication.translate(
+            "BatchRenderer", u"FBX", None))
+        self.chbox_ma.setText(QCoreApplication.translate(
+            "BatchRenderer", u"MA", None))
+        self.btn_select_files.setText(
+            QCoreApplication.translate("BatchRenderer", u"Add Item", None))
+        self.btn_delete_files.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Delete Item", None))
+        self.btn_clear_list.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Clear All", None))
+        self.btn_output_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Output Directory", None))
+        self.lbl_output_dir.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Selected Output Directory...", None))
+        self.lbl_render_settings.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Render Settings", None))
+        self.cmb_output_type.setItemText(
+            0, QCoreApplication.translate("BatchRenderer", u"png", None))
+        self.cmb_output_type.setItemText(
+            1, QCoreApplication.translate("BatchRenderer", u"jpeg", None))
+        self.cmb_output_type.setItemText(
+            2, QCoreApplication.translate("BatchRenderer", u"exr", None))
 
-        self.cmb_output_size.setItemText(0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
-        self.cmb_output_size.setItemText(1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
+        self.cmb_output_size.setItemText(
+            0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
+        self.cmb_output_size.setItemText(
+            1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
 
-        self.btn_close.setText(QCoreApplication.translate("BatchRenderer", u"Close", None))
-        self.btn_render.setText(QCoreApplication.translate("BatchRenderer", u"Render", None))
+        self.btn_close.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Close", None))
+        self.btn_render.setText(QCoreApplication.translate(
+            "BatchRenderer", u"Render", None))
     # retranslateUi
-
