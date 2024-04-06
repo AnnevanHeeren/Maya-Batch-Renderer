@@ -270,7 +270,8 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         self.ui.lbl_output_dir.setEnabled(True)
         self.ui.lbl_output_dir.setText(self.output_dir)
 
-        self.output_dir = self.output_dir.replace('/', '\\')
+        # gets the path separator for the os and duplicates it
+        self.output_dir = self.output_dir.replace('/', os.sep*2)
 
         print(self.output_dir)
 
@@ -318,7 +319,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         for full_path, file in self.file_dict.items():
             geo = file.split('.')[0]
             pm.setAttr('defaultRenderGlobals.imageFilePrefix',
-                       f'{self.output_dir}\\{geo}/{geo}',
+                       f'{self.output_dir}{os.sep*2}{geo}/{geo}',
                        type='string')
             imported = pm.importFile(full_path, i=True, returnNewNodes=True)
             self.scale_obj(imported)
