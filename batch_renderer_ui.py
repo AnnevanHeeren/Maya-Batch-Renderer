@@ -146,11 +146,6 @@ class Ui_BatchRenderer(object):
 
         self.verticalLayout.addWidget(self.lbl_output_dir)
 
-        self.horizontalSpacer_5 = QSpacerItem(
-            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
-
-        self.verticalLayout.addItem(self.horizontalSpacer_5)
-
         self.lbl_render_settings = QLabel(self.verticalLayoutWidget)
         self.lbl_render_settings.setObjectName(u"lbl_render_settings")
 
@@ -175,6 +170,24 @@ class Ui_BatchRenderer(object):
             40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
         self.verticalLayout.addItem(self.horizontalSpacer_4)
+
+        self.lbl_frames = QLabel(self.verticalLayoutWidget)
+        self.lbl_frames.setObjectName(u"lbl_frames")
+
+        self.verticalLayout.addWidget(self.lbl_frames)
+
+        self.spinBox = QSpinBox(self.verticalLayoutWidget)
+        self.spinBox.setObjectName(u"spinBox")
+        self.spinBox.setMinimum(1)
+        self.spinBox.setMaximum(1000)
+        self.spinBox.setValue(120)
+
+        self.verticalLayout.addWidget(self.spinBox)
+
+        self.horizontalSpacer_5 = QSpacerItem(
+            40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
+
+        self.verticalLayout.addItem(self.horizontalSpacer_5)
 
         self.horizontalLayout_6 = QHBoxLayout()
         self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
@@ -244,6 +257,9 @@ class Ui_BatchRenderer(object):
             0, QCoreApplication.translate("BatchRenderer", u"1920x1080", None))
         self.cmb_output_size.setItemText(
             1, QCoreApplication.translate("BatchRenderer", u"960x540", None))
+
+        self.lbl_frames.setText(QCoreApplication.translate(
+            "Dialog", u"Amount of Frames", None))
 
         self.btn_close.setText(QCoreApplication.translate(
             "BatchRenderer", u"Close", None))

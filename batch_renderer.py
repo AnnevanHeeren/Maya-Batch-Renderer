@@ -48,7 +48,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         self.render_cam
 
         self.START_FRAME = 1001
-        self.END_FRAME = 1021
+        # self.END_FRAME = 1021
 
         self.output_dir = ""
 
@@ -258,7 +258,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         pm.setKeyframe(geo, attribute='rotateY',
                        time=self.START_FRAME, value=0)
         pm.setKeyframe(geo, attribute='rotateY',
-                       time=self.END_FRAME, value=360)
+                       time=self.get_renderrange(), value=360)
 
     def set_output_directory(self):
         """
@@ -283,6 +283,11 @@ class BatchRenderer(batch_renderer_ui.QDialog):
                         rotate=True, scale=True)
         pm.matchTransform(geo, 'bounds')
 
+    def get_renderrange(self):
+        frame_amount = self.ui.spinBox.value()
+        end_frame = self.START_FRAME + frame_amount - 1
+        return end_frame
+
     def render(self):
         """
         Sets render settings
@@ -294,7 +299,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         pm.setAttr('defaultRenderGlobals.extensionPadding', 4)
         pm.setAttr('defaultRenderGlobals.putFrameBeforeExt', 1)
         pm.setAttr('defaultRenderGlobals.startFrame', self.START_FRAME)
-        pm.setAttr('defaultRenderGlobals.endFrame', self.END_FRAME)
+        pm.setAttr('defaultRenderGlobals.endFrame', self.get_renderrange())
         pm.setAttr(self.render_cam[0].renderable, True)
         pm.setAttr('persp.renderable', False)
 
