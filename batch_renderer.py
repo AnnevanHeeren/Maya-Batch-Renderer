@@ -36,7 +36,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
 
         app = batch_renderer_ui.QApplication.instance()
         for widget in app.topLevelWidgets():
-            # if the name of the dialog already exists as another dialog,
+            # If the name of the dialog already exists as another dialog,
             # close it
             if widget.objectName() == self.ui.object_name:
                 widget.close()
@@ -48,7 +48,6 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         self.render_cam
 
         self.START_FRAME = 1001
-        # self.END_FRAME = 1021
 
         self.output_dir = ""
 
@@ -59,7 +58,7 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         self.ui.btn_close.clicked.connect(self.close)
 
         # When a file type checkbox is pressed, the update method is called.
-        # stateChanged.connect() returns a state, lambda gets the state and
+        # StateChanged.connect() returns a state, lambda gets the state and
         # passes it to the update checkbox function.
         self.ui.chbox_fbx.stateChanged.connect(lambda state:
                                                self.update_checkbox_filetype('fbx', state))
@@ -146,7 +145,6 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         self.ui.lbl_selected_dir.setText(self.folder_dir)
         self.file_dict.clear()
         self.get_files()
-        # print(self.file_dict)
         self.list_files()
 
     def update_checkbox_filetype(self, checkbox, state):
@@ -156,10 +154,10 @@ class BatchRenderer(batch_renderer_ui.QDialog):
         :param state: the state the checkbox changed to
         """
 
-        # state 2 means checkbox is checked
+        # State 2 means checkbox is checked
         if state == 2:
             self.file_type_list.append(checkbox)
-        # state 0 means checkbox is unchecked
+        # State 0 means checkbox is unchecked
         elif state == 0:
             self.file_type_list.remove(checkbox)
 
@@ -229,7 +227,6 @@ class BatchRenderer(batch_renderer_ui.QDialog):
                 file = full_path.split('/')[-1]
                 self.original_file_dict[full_path] = file
                 self.file_dict[full_path] = file
-        # print(self.file_dict)
         self.file_dict = self.filter_files()
         self.list_files()
 
